@@ -16,7 +16,8 @@ function displayPreviousCitySearches() {
     previousCitiesEl.empty();
     cityList.forEach(city => {
         const cityBtn = $('<button>')
-            .addClass('btn city-btn bg-dark text-light my-1 w-100')
+            .addClass('btn city-btn bg-info text-light my-2 w-100')
+            .attr('id', city)
             .text(city);
         previousCitiesEl.append(cityBtn);
     });
@@ -32,6 +33,10 @@ searchBtnEl.on('click', function () {
         displayPreviousCitySearches(); // Update the displayed list
     }
 });
+
+previousCitiesEl.on('click', function() {
+    console.log("yaya")
+})
 
 function init() {
     loadPreviousCitySearches();
