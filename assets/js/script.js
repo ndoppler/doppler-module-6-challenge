@@ -23,8 +23,18 @@ function displayPreviousCitySearches() {
     });
 }
 
-function geoLocationGet() {
+function geoLocationGet(searchInput) {
+    const url = 'https://api.openweathermap.org/geo/1.0/direct?q=';
+    const url2 = '&limit=1&appid=14462ac933eb3455a10c1a0bd20bdd1e';
+    const urlInput = url + searchInput + url2;
 
+    fetch(urlInput)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            console.log(data);
+        });
 }
 
 function forecastGet() {
@@ -44,9 +54,11 @@ searchBtnEl.on('click', function () {
         citySearchEl.val(''); // Clear the input field
         displayPreviousCitySearches(); // Update the displayed list
     }
+
+    geoLocationGet(searchInput);
 });
 
-previousCitiesEl.on('click', function() {
+previousCitiesEl.on('click', function () {
 })
 
 function init() {
