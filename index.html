@@ -22,14 +22,16 @@
     <body class="container-fluid">
         <div class="row">
             <section class="col-2 bg-dark text-light">
-                <div class="col">
+                <div class="col citySearchSection" id="citySearchSection">
                     <h3 class="my-4 px-3 text-center">Search For a City:</h3>
                     <input class="my-3 w-100" type="text" id="citySearch" name="citySearch"></input>
                     <div class="w-100"></div>
                     <button class="btn bg-warning my-1 w-100" id="searchBtn">Search</button>
                 </div>
                 <div class="w-100"></div>
-                <div class="col" id="previousSearches">
+                <div class="col bg-dark">
+                    <div id="previousCitySearches">
+                    </div>
                 </div>
             </section>
             <section class="col-10 bg-light text-dark">Output Section</section>
