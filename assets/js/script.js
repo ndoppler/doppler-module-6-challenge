@@ -23,6 +23,18 @@ function displayPreviousCitySearches() {
     });
 }
 
+function geoLocationGet() {
+
+}
+
+function forecastGet() {
+
+}
+
+function currentWeatherGet() {
+
+}
+
 searchBtnEl.on('click', function () {
     loadPreviousCitySearches();
     const searchInput = citySearchEl.val().trim();
@@ -35,7 +47,6 @@ searchBtnEl.on('click', function () {
 });
 
 previousCitiesEl.on('click', function() {
-    console.log("yaya")
 })
 
 function init() {
