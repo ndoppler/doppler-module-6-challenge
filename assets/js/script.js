@@ -34,12 +34,12 @@ function geoLocationGet(searchInput) {
             return response.json();
         })
         .then(function (data) {
-            const geoCoordinates = {
-                'lat': data[0].lat,
-                'lon': data[0].lon
-            }
+            const cityLat = data[0].lat
+            const cityLon = data[0].lon
             
-            localStorage.setItem('cityGeoCoordinates', JSON.stringify(geoCoordinates))
+            
+            localStorage.setItem('cityLat', JSON.stringify(cityLat))
+            localStorage.setItem('cityLon', JSON.stringify(cityLon))
         });
 
 
@@ -59,12 +59,13 @@ searchBtnEl.on('click', function () {
     if (searchInput) {
         geoLocationGet(searchInput);
 
-        const cityGeoCoordinates = JSON.parse(localStorage.getItem('cityGeoCoordinates'))
+        const cityLat = JSON.parse(localStorage.getItem('cityLat'))
+        const cityLon = JSON.parse(localStorage.getItem('cityLon'))
 
         cityDetails = {
             'name': searchInput,
-            'lat': cityGeoCoordinates.lat,
-            'lon': cityGeoCoordinates.lon,
+            'lat': cityLat,
+            'lon': cityLon,
         }
         cityList.push(cityDetails);
         cityDetails = ''
