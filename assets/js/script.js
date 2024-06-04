@@ -27,14 +27,22 @@ function geoLocationGet(searchInput) {
     const url = 'https://api.openweathermap.org/geo/1.0/direct?q=';
     const url2 = '&limit=1&appid=14462ac933eb3455a10c1a0bd20bdd1e';
     const urlInput = url + searchInput + url2;
+    const geoCoordinates = ''
 
     fetch(urlInput)
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data);
+            const geoCoordinates = {
+                'lat': data[0].lat,
+                'lon': data[0].lon
+            }
+            
+            localStorage.setItem('cityGeoCoordinates', JSON.stringify(geoCoordinates))
         });
+
+
 }
 
 function forecastGet() {
@@ -49,13 +57,25 @@ searchBtnEl.on('click', function () {
     loadPreviousCitySearches();
     const searchInput = citySearchEl.val().trim();
     if (searchInput) {
-        cityList.push(searchInput);
+        geoLocationGet(searchInput);
+
+        const cityGeoCoordinates = JSON.parse(localStorage.getItem('cityGeoCoordinates'))
+
+        cityDetails = {
+            'name': searchInput,
+            'lat': cityGeoCoordinates.lat,
+            'lon': cityGeoCoordinates.lon,
+        }
+        cityList.push(cityDetails);
+        cityDetails = ''
         savePreviousCitySearches();
         citySearchEl.val(''); // Clear the input field
         displayPreviousCitySearches(); // Update the displayed list
+        console.log(cityDetails)
     }
 
-    geoLocationGet(searchInput);
+    
+
 });
 
 previousCitiesEl.on('click', function () {
