@@ -21,7 +21,10 @@ function displayPreviousCitySearches() {
         const cityBtn = $('<button>')
             .addClass('btn city-btn bg-info text-light my-2 w-100')
             .attr('id', city.name)
-            .text(city.name);
+            .text(city.name)
+            .click(function() {
+                localStorage.setItem('prevCity', JSON.stringify($(this).text()))
+            })
         previousCitiesEl.append(cityBtn);
     });
 }
@@ -53,42 +56,37 @@ function currentWeatherGet(latitude, longitude, apiKey) {
             return response.json();
         })
         .then(function (data) {
-
             const weatherImageBase = 'https://openweathermap.org/img/wn/'
             const weatherImageModifier = data.weather[0].icon
             const weatherImageSuffix = '.png'
-            weatherImage = weatherImageBase+weatherImageModifier+weatherImageSuffix
-
-            console.log(weatherImage)
+            weatherImage = weatherImageBase + weatherImageModifier + weatherImageSuffix;
 
             const dailyWeather = $('<h1>')
                 .text(`${data.name} (${dayjs(data.dt * 1000).format("MM/DD/YYYY")})`)
                 .addClass('w-25 m-3');
-            dailyWeatherEl.append(dailyWeather);
-
             const dailyImage = $('<img>')
                 .attr({
                     'src': weatherImage,
                     'id': 'weatherIcon'
                 })
-                .addClass('mw-5 mh-5')
-            dailyWeatherEl.append(dailyImage)
-
+                .addClass('mw-5 mh-5');
             const divider = $('<div>')
-                .addClass('w-100')
-            dailyWeatherEl.append(divider)
-
+                .addClass('w-100');
             const dailyTemp = $('<h3>')
-                .text(`Temp: ${data.main.temp}°F`)
-            dailyWeatherEl.append(dailyTemp)
-
+                .text(`Temp: ${data.main.temp}°F`);
             const dailyWind = $('<h3>')
-                .text(`Wind: ${data.main.wind} MPH`)
-            dailyWeatherEl.append(dailyWind)
-
+                .text(`Wind: ${data.main.wind} MPH`);
             const dailyHumidity = $('<h3>')
-                .text(`Humidity: ${data.main.humidity} %`)
-            dailyWeatherEl.append(dailyHumidity)
+                .text(`Humidity: ${data.main.humidity} %`);
+
+            dailyWeatherEl.append(dailyWeather);
+            dailyWeatherEl.append(dailyImage);
+            dailyWeatherEl.append(divider);
+            dailyWeatherEl.append(dailyTemp);
+            dailyWeatherEl.append(dailyWind);
+            dailyWeatherEl.append(dailyHumidity);
+
+
         })
 }
 
@@ -121,7 +119,32 @@ searchBtnEl.on('click', function () {
 });
 
 previousCitiesEl.on('click', function () {
-    currentWeatherGet();
+    loadPreviousCitySearches();
+    const searchInput = JSON.parse(localStorage.getItem('prevCity'))
+    if (searchInput) {
+        geoLocationGet(searchInput).then(function (data) {
+
+            const cityLat = JSON.parse(localStorage.getItem('cityLat'))
+            const cityLon = JSON.parse(localStorage.getItem('cityLon'))
+
+            cityDetails = {
+                'name': searchInput,
+                'lat': cityLat,
+                'lon': cityLon,
+            }
+            cityList.push(cityDetails);
+            cityDetails = ''
+            savePreviousCitySearches();
+            citySearchEl.val(''); // Clear the input field
+            displayPreviousCitySearches(); // Update the displayed list
+        })
+            .then(function (data) {
+                const lat = JSON.parse(localStorage.getItem('cityLat'))
+                const lon = JSON.parse(localStorage.getItem('cityLon'))
+                currentWeatherGet(lat, lon, apiKey)
+            })
+    }
+    
 })
 
 function init() {
