@@ -1,7 +1,10 @@
 const citySearchEl = $('#citySearch');
 const searchBtnEl = $('#searchBtn');
 const previousCitiesEl = $('#previousCitySearches'); // Container for displaying previous city searches
+const apiKey = '14462ac933eb3455a10c1a0bd20bdd1e';
+const dailyWeatherEl = $('#dailyWeatherSection');
 let cityList = [];
+
 
 function loadPreviousCitySearches() {
     cityList = JSON.parse(localStorage.getItem('cityList')) || [];
@@ -24,8 +27,8 @@ function displayPreviousCitySearches() {
 }
 
 function geoLocationGet(searchInput) {
-    const url = 'https://api.openweathermap.org/geo/1.0/direct?q=';
-    const url2 = '&limit=1&appid=14462ac933eb3455a10c1a0bd20bdd1e';
+    const url = `https://api.openweathermap.org/geo/1.0/direct?q=`;
+    const url2 = `&limit=1&appid=${apiKey}`;
     const urlInput = url + searchInput + url2;
 
     return fetch(urlInput)
@@ -42,13 +45,51 @@ function geoLocationGet(searchInput) {
 
             return data
         });
-
-
-
 }
 
-function currentWeatherGet() {
+function currentWeatherGet(latitude, longitude, apiKey) {
+    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=imperial`)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
 
+            const weatherImageBase = 'https://openweathermap.org/img/wn/'
+            const weatherImageModifier = data.weather[0].icon
+            const weatherImageSuffix = '.png'
+            weatherImage = weatherImageBase+weatherImageModifier+weatherImageSuffix
+
+            console.log(weatherImage)
+
+            const dailyWeather = $('<h1>')
+                .text(`${data.name} (${dayjs(data.dt * 1000).format("MM/DD/YYYY")})`)
+                .addClass('w-25 m-3');
+            dailyWeatherEl.append(dailyWeather);
+
+            const dailyImage = $('<img>')
+                .attr({
+                    'src': weatherImage,
+                    'id': 'weatherIcon'
+                })
+                .addClass('mw-5 mh-5')
+            dailyWeatherEl.append(dailyImage)
+
+            const divider = $('<div>')
+                .addClass('w-100')
+            dailyWeatherEl.append(divider)
+
+            const dailyTemp = $('<h3>')
+                .text(`Temp: ${data.main.temp}°F`)
+            dailyWeatherEl.append(dailyTemp)
+
+            const dailyWind = $('<h3>')
+                .text(`Wind: ${data.main.wind} MPH`)
+            dailyWeatherEl.append(dailyWind)
+
+            const dailyHumidity = $('<h3>')
+                .text(`Humidity: ${data.main.humidity} %`)
+            dailyWeatherEl.append(dailyHumidity)
+        })
 }
 
 searchBtnEl.on('click', function () {
@@ -70,13 +111,17 @@ searchBtnEl.on('click', function () {
             savePreviousCitySearches();
             citySearchEl.val(''); // Clear the input field
             displayPreviousCitySearches(); // Update the displayed list
-            console.log(cityDetails)
-
         })
+            .then(function (data) {
+                const lat = JSON.parse(localStorage.getItem('cityLat'))
+                const lon = JSON.parse(localStorage.getItem('cityLon'))
+                currentWeatherGet(lat, lon, apiKey)
+            })
     }
 });
 
 previousCitiesEl.on('click', function () {
+    currentWeatherGet();
 })
 
 function init() {
@@ -84,3 +129,5 @@ function init() {
 }
 
 init();
+
+
