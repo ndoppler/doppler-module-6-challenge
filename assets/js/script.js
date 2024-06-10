@@ -129,27 +129,27 @@ function currentWeatherGet(latitude, longitude, apiKey) {
                     const day1Image = $('<img>')
                         .attr({
                             'src': `${weatherImageBase}${data.list[0].weather[0].icon}${weatherImageSuffix}`,
-                            'id': 'weatherIcon'
+                            'id': 'weatherIconSmall'
                         })
                     const day2Image = $('<img>')
                         .attr({
                             'src': `${weatherImageBase}${data.list[8].weather[0].icon}${weatherImageSuffix}`,
-                            'id': 'weatherIcon'
+                            'id': 'weatherIconSmall'
                         })
                     const day3Image = $('<img>')
                         .attr({
                             'src': `${weatherImageBase}${data.list[16].weather[0].icon}${weatherImageSuffix}`,
-                            'id': 'weatherIcon'
+                            'id': 'weatherIconSmall'
                         })
                     const day4Image = $('<img>')
                         .attr({
                             'src': `${weatherImageBase}${data.list[24].weather[0].icon}${weatherImageSuffix}`,
-                            'id': 'weatherIcon'
+                            'id': 'weatherIconSmall'
                         })
                     const day5Image = $('<img>')
                         .attr({
                             'src': `${weatherImageBase}${data.list[32].weather[0].icon}${weatherImageSuffix}`,
-                            'id': 'weatherIcon'
+                            'id': 'weatherIconSmall'
                         })
 
                     const day1Temp = $('<h4>')
@@ -240,7 +240,6 @@ function currentWeatherGet(latitude, longitude, apiKey) {
                     forecastDay3.append(day3Humidity)
                     forecastDay4.append(day4Humidity)
                     forecastDay5.append(day5Humidity)
-
                 })
         })
 }
